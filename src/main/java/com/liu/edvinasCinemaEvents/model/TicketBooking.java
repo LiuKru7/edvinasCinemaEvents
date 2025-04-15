@@ -21,7 +21,7 @@ public class TicketBooking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String screeningId;
+    private Long screeningId;
 
     private String viewerName;
 
