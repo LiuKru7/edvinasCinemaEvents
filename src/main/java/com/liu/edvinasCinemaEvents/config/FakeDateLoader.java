@@ -7,7 +7,10 @@ import com.liu.edvinasCinemaEvents.repository.ScreeningRepository;
 import com.liu.edvinasCinemaEvents.repository.TicketBookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -18,12 +21,14 @@ import java.util.List;
 public class FakeDateLoader implements CommandLineRunner {
 
     private final ScreeningRepository screeningRepository;
-    private final CinemaRepository cinemaRepository;
-    private final TicketBookingRepository ticketBookingRepository;
+    private final CacheManager cacheManager;
 
 
     @Override
     public void run(String... args) throws Exception {
+
+        Cache screeningCache = cacheManager.getCache("screening");
+
         Cinema cinema = Cinema.builder()
                 .name("CINEMA")
                 .location("Vilnius")
@@ -35,9 +40,12 @@ public class FakeDateLoader implements CommandLineRunner {
                 .starTime(Timestamp.valueOf(LocalDateTime.of(2025, 5, 1, 22, 0, 0)))
                 .build();
 
-        cinema.setScreenings(List.of(screening));
 
-        cinemaRepository.save(cinema);
+        cinema.setScreenings(List.of(screening));
+        screening.setCinema(cinema);
+
+        screeningRepository.save(screening);
+        screeningCache.put(screening.getId(),screening);
 
     }
 }

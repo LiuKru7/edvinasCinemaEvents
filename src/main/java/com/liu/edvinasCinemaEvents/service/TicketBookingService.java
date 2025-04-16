@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -16,6 +17,7 @@ public class TicketBookingService  {
     private final ApplicationEventPublisher eventPublisher;
     private final TicketBookingRepository ticketBookingRepository;
 
+    @Transactional
     public TicketBooking bookTicket(TicketBooking ticketBooking) {
         TicketBooking savedTicketBooking = ticketBookingRepository.save(ticketBooking);
         eventPublisher.publishEvent(new TicketBookingEvent(this,savedTicketBooking));

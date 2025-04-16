@@ -5,7 +5,9 @@ import com.liu.edvinasCinemaEvents.model.Screening;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class CacheService {
     private final CacheManager cacheManager;
